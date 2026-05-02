@@ -1,13 +1,13 @@
 # Build stage
-FROM maven:3.8.4-eclipse-temurin-17 AS build
+FROM docker.io/library/maven:3.8.4-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Run stage - USING ECLIPSE TEMURIN (the modern replacement for openjdk)
-FROM eclipse-temurin:17-jdk-slim
+# Run stage - USING FULL IMAGE PATH
+FROM docker.io/library/eclipse-temurin:17-jdk-slim
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
